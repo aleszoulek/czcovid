@@ -3,6 +3,10 @@ var myChart = new Chart(ctx, {
     type: 'line',
     data: data,
     options: {
+        title:{
+            display: true,
+            text: 'Covid 19 v ČR: Počet umrtí denně vs procento lidí s alespoň první dávkou vakcíny.',
+        },
         scales: {
             xAxes: [{
                 type: 'time',

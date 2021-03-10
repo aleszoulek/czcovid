@@ -28,6 +28,16 @@ def parse_jab(raw):
     }
 
 
+AGE_GROUPS_COUNTS = {
+    '40-': 4_839_611,
+    '40+': 1_724_438,
+    '50+': 1_320_174,
+    '60+': 1_358_902,
+    '70+': 973_768,
+    '80+': 432_907,
+}
+
+
 class Line:
     DASHED = False
     DOTTED = 'dotted'
@@ -102,7 +112,8 @@ class LineJabs(Line):
         "80": "80+",
     }
 
-    def __init__(self, **kwargs):
+    def __init__(self, relative=None, **kwargs):
+        self.relative = relative
         super().__init__(**kwargs)
 
     @classmethod
@@ -116,7 +127,10 @@ class LineJabs(Line):
         total = 0
         for day in x:
             total += sum([i['first_count'] for i in filter(self.filter, data[day])])
-            self._points[day] = total
+            if self.relative:
+                self._points[day] = round(total / self.relative * 100, 2)
+            else:
+                self._points[day] = total
 
 
 class Graph:
@@ -185,36 +199,42 @@ graph = Graph(
             label='💉 TOTAL',
             color=Graph.COLORS[6],
             enabled=False,
+            relative=sum(AGE_GROUPS_COUNTS.values()),
         ),
         LineJabs(
             label='💉 80+',
             filter=LineJabs.age_filter(LineJabs.AGE_GROUPS['80']),
             color=Graph.COLORS[0],
             enabled=True,
+            relative=AGE_GROUPS_COUNTS['80+'],
         ),
         LineJabs(
             label='💉 70+',
             filter=LineJabs.age_filter(LineJabs.AGE_GROUPS['70'], LineJabs.AGE_GROUPS['75']),
             color=Graph.COLORS[1],
             enabled=True,
+            relative=AGE_GROUPS_COUNTS['70+'],
         ),
         LineJabs(
             label='💉 60+',
             filter=LineJabs.age_filter(LineJabs.AGE_GROUPS['60'], LineJabs.AGE_GROUPS['65']),
             color=Graph.COLORS[2],
             enabled=True,
+            relative=AGE_GROUPS_COUNTS['60+'],
         ),
         LineJabs(
             label='💉 50+',
             filter=LineJabs.age_filter(LineJabs.AGE_GROUPS['50'], LineJabs.AGE_GROUPS['55']),
             color=Graph.COLORS[3],
             enabled=True,
+            relative=AGE_GROUPS_COUNTS['50+'],
         ),
         LineJabs(
             label='💉 40+',
             filter=LineJabs.age_filter(LineJabs.AGE_GROUPS['40'], LineJabs.AGE_GROUPS['45']),
             color=Graph.COLORS[4],
             enabled=True,
+            relative=AGE_GROUPS_COUNTS['40+'],
         ),
         LineJabs(
             label='💉 40-',
@@ -227,6 +247,7 @@ graph = Graph(
             ),
             color=Graph.COLORS[5],
             enabled=True,
+            relative=AGE_GROUPS_COUNTS['40-'],
         ),
         LineDeaths(
             label='✖ 80+ [per day]',
