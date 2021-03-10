@@ -19,11 +19,26 @@ var myChart = new Chart(ctx, {
                 display: true,
                 position: 'left',
                 id: 'y-axis-deaths',
+                scaleLabel: {
+                    display: true,
+                    labelString: 'úmrtí za den',
+                    fontSize: 15,
+                },
             }, {
                 type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                 display: true,
                 position: 'right',
                 id: 'y-axis-jabs',
+                scaleLabel: {
+                    display: true,
+                    labelString: 'proočkovanost v procentech (alespoň první dávka)',
+                    fontSize: 15,
+                },
+                ticks: {
+                     callback: function(value, index, values) {
+                        return value + ' %';
+                    }
+                },
 
                 // grid line settings
                 gridLines: {

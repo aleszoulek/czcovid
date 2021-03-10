@@ -356,7 +356,7 @@ TEMPLATE = f"""
 
 <script src="Chart.bundle.min.js"></script>
 
-<canvas id="myChart" width="400" height="200"></canvas>
+<canvas id="myChart" width="300" height="200"></canvas>
 {graph.render()}
 <script src="main.js"></script>
 </body>
